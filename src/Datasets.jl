@@ -1,5 +1,21 @@
+#Excerpted from RDatasets
+
 module Datasets
 
-# package code goes here
+using Reexport
+@reexport using DataFrames
+
+export dataset
+
+function dataset(package_name::String, dataset_name::String)
+    basename = joinpath(dirname(@__FILE__), "..", "data", package_name)
+
+    filename = joinpath(basename, string(dataset_name, ".csv.gz"))
+    if !isfile(filename)
+        error(@sprintf "Unable to locate file %s\n" filename)
+    else
+        return readtable(filename)
+    end
+end
 
 end # module
