@@ -4,6 +4,7 @@ module Datasets
 
 using Reexport
 @reexport using DataFrames
+using RLESUtils
 @reexport using DataFrameSets
 
 export dataset
