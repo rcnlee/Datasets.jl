@@ -26,6 +26,9 @@ end
 #Load all dataframes in the package, returns a DFSet
 function dataset(data_name::AbstractString)
   dirpath  = joinpath(DATAPATH, data_name)
+  if !isdir(dirpath)
+      error(@sprintf "No such directory %s\n" dirpath)
+  end
   Ds = load_csvs(dirpath)
   Ds
 end
