@@ -7,13 +7,15 @@ using Reexport
 using RLESUtils
 @reexport using DataFrameSets
 
-export dataset
+export dataset, listdatasets, listdataset
+
+const DATAPATH = joinpath(dirname(@__FILE__), "..", "data")
 
 #Load a particular dataframe
 function dataset(package_name::AbstractString, dataset_name::AbstractString)
-    basename = joinpath(dirname(@__FILE__), "..", "data", package_name)
+    dirpath = joinpath(DATAPATH, package_name)
 
-    filename = joinpath(basename, string(dataset_name, ".csv.gz"))
+    filename = joinpath(dirpath, string(dataset_name, ".csv.gz"))
     if !isfile(filename)
         error(@sprintf "Unable to locate file %s\n" filename)
     else
@@ -22,19 +24,22 @@ function dataset(package_name::AbstractString, dataset_name::AbstractString)
 end
 
 #Load all dataframes in the package, returns a DFSet
-function dataset(package_name::AbstractString; getname::Function=fileroot)
-  dir = joinpath(dirname(@__FILE__), "..", "data", package_name)
-  files = readdir(dir)
-
-  dfs = DFSet()
-  for f in files
-    D = readtable(joinpath(dir, f))
-    name = getname(f, D)
-    push!(dfs, (name, D))
-  end
-  return dfs
+function dataset(data_name::AbstractString)
+  dirpath  = joinpath(DATAPATH, data_name)
+  Ds = load_csvs(dirpath)
+  Ds
 end
 
-fileroot(filename::AbstractString, D::DataFrame) = split(basename(filename), '.')[1]
+function listdatasets()
+    dsets = readdir(DATAPATH)
+    filter!(x -> isdir(joinpath(DATAPATH, x)), dsets)
+    dsets
+end
+
+function listdataset(package_name::AbstractString)
+   data = readdir(joinpath(DATAPATH, package_name))
+   filter!(x -> endswith(x, ".csv.gz"), data)
+   data
+end
 
 end # module
