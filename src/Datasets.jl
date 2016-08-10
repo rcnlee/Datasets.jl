@@ -33,6 +33,14 @@ function dataset(data_name::AbstractString)
   Ds
 end
 
+#Load all dataframes in the package, returns a DFSet
+function dataset(data_name::AbstractString, label::Symbol; 
+    transform::Function=identity)
+  Ds = dataset(data_name)
+  Dl = DFSetLabeled(Ds, label; transform=transform)
+  Dl
+end
+
 function listdatasets()
     dsets = readdir(DATAPATH)
     filter!(x -> isdir(joinpath(DATAPATH, x)), dsets)
