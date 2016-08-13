@@ -7,7 +7,7 @@ using Reexport
 using RLESUtils
 @reexport using DataFrameSets
 
-export dataset, listdatasets, listdataset
+export dataset, listdatasets, listdataset, datadir
 
 const DATAPATH = joinpath(dirname(@__FILE__), "..", "data")
 
@@ -52,5 +52,8 @@ function listdataset(package_name::AbstractString)
    filter!(x -> endswith(x, ".csv.gz"), data)
    data
 end
+
+datadir(package_name::AbstractString="") = abspath(joinpath(DATAPATH, package_name))
+
 
 end # module
