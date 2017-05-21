@@ -7,9 +7,10 @@ using Reexport
 using RLESUtils
 @reexport using DataFrameSets
 
-export dataset, listdatasets, listdataset, datadir
+export dataset, listdatasets, listdataset, datadir, load_meta
 
 const DATAPATH = joinpath(dirname(@__FILE__), "..", "data")
+const METAFILE = "_META.csv.gz"
 
 #Load a particular dataframe
 function dataset(package_name::AbstractString, dataset_name::AbstractString)
@@ -25,20 +26,20 @@ end
 
 #Load all dataframes in the package, returns a DFSet
 function dataset(data_name::AbstractString)
-  dirpath  = joinpath(DATAPATH, data_name)
-  if !isdir(dirpath)
-      error(@sprintf "No such directory %s\n" dirpath)
-  end
-  Ds = load_csvs(dirpath)
-  Ds
+    dirpath  = joinpath(DATAPATH, data_name)
+    if !isdir(dirpath)
+        error(@sprintf "No such directory %s\n" dirpath)
+    end
+    Ds = load_csvs(dirpath)
+    Ds
 end
 
 #Load all dataframes in the package, returns a DFSet
 function dataset(data_name::AbstractString, label::Symbol; 
     transform::Function=identity)
-  Ds = dataset(data_name)
-  Dl = DFSetLabeled(Ds, label; transform=transform)
-  Dl
+    Ds = dataset(data_name)
+    Dl = DFSetLabeled(Ds, label; transform=transform)
+    Dl
 end
 
 function listdatasets()
@@ -55,5 +56,13 @@ end
 
 datadir(package_name::AbstractString="") = abspath(joinpath(DATAPATH, package_name))
 
+function load_meta(data_name::AbstractString)
+    dirpath  = joinpath(DATAPATH, data_name)
+    if !isdir(dirpath)
+        error(@sprintf "No such directory %s\n" dirpath)
+    end
+    M = readtable(joinpath(dirpath, METAFILE))
+    M 
+end
 
 end # module
