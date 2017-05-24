@@ -7,7 +7,7 @@ using Reexport
 using RLESUtils
 @reexport using DataFrameSets
 
-export dataset, listdatasets, listdataset, datadir, load_meta
+export dataset, list_datasets, list_dataset, datadir, load_meta
 
 const DATAPATH = joinpath(dirname(@__FILE__), "..", "data")
 const METAFILE = "_META.csv.gz"
@@ -42,13 +42,13 @@ function dataset(data_name::AbstractString, label::Symbol;
     Dl
 end
 
-function listdatasets()
+function list_datasets()
     dsets = readdir(DATAPATH)
     filter!(x -> isdir(joinpath(DATAPATH, x)), dsets)
     dsets
 end
 
-function listdataset(package_name::AbstractString)
+function list_dataset(package_name::AbstractString)
    data = readdir(joinpath(DATAPATH, package_name))
    filter!(x -> endswith(x, ".csv.gz"), data)
    data
