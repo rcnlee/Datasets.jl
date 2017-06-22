@@ -7,7 +7,7 @@ using Reexport
 using RLESUtils
 @reexport using DataFrameSets
 
-export dataset, list_datasets, list_dataset, datadir, load_meta
+export dataset, list_datasets, list_dataset, datadir, load_meta, write_dataset
 
 const DATAPATH = joinpath(dirname(@__FILE__), "..", "data")
 const METAFILE = "_META.csv.gz"
@@ -63,6 +63,11 @@ function load_meta(data_name::AbstractString)
     end
     M = readtable(joinpath(dirpath, METAFILE))
     M 
+end
+
+function write_dataset(data_name::AbstractString, Ds::DFSet)
+    dirpath  = joinpath(DATAPATH, data_name)
+    save_csvs(dirpath, Ds) 
 end
 
 end # module
