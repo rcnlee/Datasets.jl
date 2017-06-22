@@ -67,6 +67,8 @@ end
 
 function write_dataset(data_name::AbstractString, Ds::DFSet)
     dirpath  = joinpath(DATAPATH, data_name)
+    m = getmeta(Ds)
+    m[:id] = 1:nrow(m)
     save_csvs(dirpath, Ds) 
 end
 
